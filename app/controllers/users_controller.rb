@@ -25,6 +25,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        SlackNotifier.new.send(@user.name, title: "新規ユーザが追加されたよ...!")
         format.html { redirect_to user_url(@user), notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
@@ -52,6 +53,7 @@ class UsersController < ApplicationController
     @user.destroy
 
     respond_to do |format|
+      SlackNotifier.new.send(@user.name, title: "ユーザが削除されたよ...!", coloer: "#ff0000")
       format.html { redirect_to users_url, notice: "User was successfully destroyed." }
       format.json { head :no_content }
     end
